@@ -1,11 +1,6 @@
-// shader vertex
-
 #version 330 core
-
-layout(location = 0) in vec4 a_Pos;
-
-uniform mat4 u_MVP;
-
+layout(location = 0) in vec4 position;
+uniform vec4 move;
 void main() {
-    gl_Position = u_MVP * a_Pos;
+	gl_Position = position+move;
 }
