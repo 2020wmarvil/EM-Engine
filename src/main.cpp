@@ -15,16 +15,12 @@
 #include <chrono>
 
 // our library imports
+#include "Shader.h"
 
 // constants
 #define WIDTH 1920
 #define HEIGHT 1080
 #define TARGET_FPS 600
-
-struct ShaderProgramSource {
-	std::string vertexSource;
-	std::string fragmentSource;
-};
 
 void processInput(GLFWwindow *window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -94,12 +90,11 @@ int main() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
 
 	// create the shader
-	std::string vsFilepath = "../res/shaders/lamp/lamp_VS.glsl";
-	std::string fsFilepath = "../res/shaders/lamp/lamp_FS.glsl";
-	ShaderProgramSource source = ParseShader(vsFilepath, fsFilepath);
-	unsigned int shader = CreateShader(source.vertexSource, source.fragmentSource);
-//	uniforms.push_back(glGetUniformLocation(shader,in.c_str()));
-//	glUniform4f(uniforms[id],a,b,c,d);
+	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
+
+	// set initial uniforms
+	shader.Bind();	
+	shader.SetUniformVec4f("u_Color", glm::vec4(0.8f, 0.25f, 0.4f, 1.0f));
 
 	std::cout << "Error code: " << glGetError() << std::endl;
 
@@ -115,9 +110,13 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		// bind everything
-		glUseProgram(shader);
+		shader.Bind();
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+		// update uniforms
+		shader.Bind();
+		shader.SetUniformVec3f("u_Move", glm::vec3(sin(glfwGetTime())/2, cos(glfwGetTime())/2, 0.0f));
 
 		// render
 		glDrawElements(GL_TRIANGLES, sizeof(indices)/3, GL_UNSIGNED_INT, nullptr);
@@ -150,85 +149,3 @@ void processInput(GLFWwindow *window) {
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
-
-ShaderProgramSource ParseShader(const std::string& vsFilepath, const std::string& fsFilepath) {
-	std::string line;
-	std::stringstream ss[2];
-
-	std::ifstream vsStream(vsFilepath);
-	while (getline(vsStream, line)) {
-		ss[0] << line << "\n";
-	}
-
-	std::ifstream fsStream(fsFilepath);
-	while (getline(fsStream, line)) {
-		ss[1] << line << "\n";
-	}
-
-	return { ss[0].str(), ss[1].str() };
-}
-
-unsigned int CompileShader(unsigned int type, const std::string& source) {
-	unsigned int id = glCreateShader(type);
-	const char* src = source.c_str();
-
-	glShaderSource(id, 1, &src, nullptr);
-	glCompileShader(id);
-
-	int result;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-
-	if (result == GL_FALSE) {
-		int length;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char* message = (char*)alloca(length * sizeof(char));
-
-		glGetShaderInfoLog(id, length, &length, message);
-		std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << std::endl;
-		std::cout << message << std::endl;
-
-		glDeleteShader(id);
-
-		return 0;
-	} return id;
-}
-
-unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader) {
-	unsigned int program = glCreateProgram();
-
-	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-	glLinkProgram(program);
-	glValidateProgram(program);
-
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-
-	return program;
-}
-/*
-void Shader::SetUniform1i(const std::string& name, int value) {
-    glUniform1i(GetUniformLocation(name), value);
-}
-
-void Shader::SetUniform1f(const std::string& name, float value) {
-    glUniform1f(GetUniformLocation(name), value);
-}
-
-void Shader::SetUniformVec3f(const std::string& name, const glm::vec3& vec) {
-	glUniform3f(GetUniformLocation(name), vec.x, vec.y, vec.z);
-}
-
-void Shader::SetUniformVec4f(const std::string& name, const glm::vec4& vec) {
-	glUniform4f(GetUniformLocation(name), vec.x, vec.y, vec.z, vec.w);
-}
-
-void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix) {
-    glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
-}
-
-	int location = glGetUniformLocation(m_RendererID, name.c_str());
-	*/
