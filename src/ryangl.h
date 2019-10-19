@@ -129,7 +129,7 @@ namespace ryangl {
 				//std::cout << uniforms[uniforms.size()-1] << std::endl;
 				return uniforms.size()-1;
 			}
-			void setUniform(int id, int a, int b, int c, int d) {
+			void setUniform(int id, float a, float b, float c, float d) {
 				glUniform4f(uniforms[id],a,b,c,d);
 			}
 			unsigned int *getVao() {
