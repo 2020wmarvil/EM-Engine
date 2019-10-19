@@ -1,5 +1,5 @@
 add_library(source STATIC 
-	# Cube.cpp		Cube.h
+	Temp.cpp
 )
 
 target_include_directories( source PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} vendor )
