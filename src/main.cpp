@@ -6,10 +6,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
-
 // standard library imports
 #include <iostream>
 #include <fstream>
@@ -28,9 +24,6 @@
 void processInput(GLFWwindow *window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
-float deltaTime = 0.0f;	
-float lastFrame = 0.0f; 
-
 int main() {
 	// glfw setup
 	glfwInit();
@@ -44,7 +37,7 @@ int main() {
 
 	glfwSwapInterval(1);
 
-	glfwSetWindowTitle(window, "ラストエグザイル");
+	glfwSetWindowTitle(window, "EM Engine");
 	glfwSetWindowAspectRatio(window, WIDTH, HEIGHT);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -59,37 +52,14 @@ int main() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// create the imgui context
-	ImGui::CreateContext();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
-
-    ImGui::StyleColorsDark();
-
 	std::cout << "Error code: " << glGetError() << std::endl;
 
 	double lasttime = glfwGetTime();
-
-	//dab
 
 	// game loop
 	while(!glfwWindowShouldClose(window)) {
 		// input
 		processInput(window);
-
-        // start the imgui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-		// create an imgui window
-	    ImGui::Begin("debug");
-	    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	    ImGui::End();
-
-		// render the imgui window
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		// swap the buffers and poll for events
 	 	glfwSwapBuffers(window);
@@ -100,11 +70,6 @@ int main() {
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	    } lasttime += 1.0/TARGET_FPS;
 	}
-
-	// terminate imgui
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 
 	// terminate glfw
     glfwDestroyWindow(window);
