@@ -1,8 +1,8 @@
 #include "Entity.h"
 
 Entity::Entity(const SpriteData& data)
-    : m_VBO(data.vertices.data(), data.vertices.size() * sizeof(float), GL_DYNAMIC_DRAW),
-      m_IBO(data.indices.data(), data.indices.size() * sizeof(unsigned int), GL_DYNAMIC_DRAW) 
+    : m_VBO(data.m_vertices.data(), data.m_vertices.size() * sizeof(float), GL_DYNAMIC_DRAW),
+      m_IBO(data.m_indices.data(), data.m_indices.size() * sizeof(unsigned int), GL_DYNAMIC_DRAW) 
 {
 	VertexBufferLayout layout;
 	layout.PushFloat(2);

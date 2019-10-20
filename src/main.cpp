@@ -62,54 +62,9 @@ int main() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// object data 
-//	float positions[] = { 
-//		-0.5f,  0.5f,
-//		 0.5f,  0.5f,
-//		 0.5f, -0.5f,
-//		-0.5f, -0.5f
-//	};
-//
-//	unsigned int indices[] = {
-//		0, 1, 2,
-//		0, 2, 3
-//	};
-
-	std::vector<float> positions = { 
-		-0.5f,  0.5f,
-		 0.5f,  0.5f,
-		 0.5f, -0.5f,
-		-0.5f, -0.5f
-	};
-
-	std::vector<unsigned int> indices = {
-		0, 1, 2,
-		0, 2, 3
-	};
-
-	// SpriteLoader loader
-	SpriteData squareData; // = loader.loadSprite("../res/sprites/square.ems");
-	Entity square(squareData);
-
-	// create the vertex objects
-	unsigned int vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	unsigned int vbo;
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_DYNAMIC_DRAW);
-	glBufferData(GL_ARRAY_BUFFER, positions.size()*sizeof(float), positions.data(), GL_DYNAMIC_DRAW);
-	glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8, (const void*)0);
-
-	unsigned int ibo;
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
-	unsigned int index_size = indices.size()*sizeof(unsigned int);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_size, indices.data(), GL_DYNAMIC_DRAW);
+	// load sprites
+	SpriteLoader loader;
+	Entity square(loader.LoadSprite("../res/sprites/square.ems"));
 
 	// create the shader
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
@@ -133,8 +88,6 @@ int main() {
 
 		// bind everything
 		shader.Bind();
-	//	glBindVertexArray(vao);
-	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 		square.Bind();
 
 		// update uniforms
@@ -142,7 +95,8 @@ int main() {
 		shader.SetUniformVec3f("u_Transform", glm::vec3(sin(glfwGetTime())/2, cos(glfwGetTime())/2, 0.0f));
 
 		// render
-		glDrawElements(GL_TRIANGLES, index_size/3, GL_UNSIGNED_INT, nullptr);
+		//glDrawElements(GL_TRIANGLES, indices.size()*sizeof(unsigned int)/3, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, 6*sizeof(unsigned int)/3, GL_UNSIGNED_INT, nullptr);
 
 		// swap the buffers and poll for events
 	 	glfwSwapBuffers(window);
@@ -153,6 +107,7 @@ int main() {
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	    } lasttime += 1.0/TARGET_FPS;
 
+		// error checking
 		if (int e=glGetError() != 0) { std::cout << "OpenGL Error: " << e << std::endl; }
 	}
 

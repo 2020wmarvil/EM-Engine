@@ -5,18 +5,13 @@
 class SpriteData {
 private:
 public:
-    std::vector<float> vertices = {
-		-0.5f,  0.5f,
-		 0.5f,  0.5f,
-		 0.5f, -0.5f,
-		-0.5f, -0.5f
-    };
+	std::vector<float> m_vertices;
+	std::vector<unsigned int> m_indices;
 
-	std::vector<unsigned int> indices = {
-		0, 1, 2,
-		0, 2, 3
-	};
+    SpriteData(const std::vector<float>& vertices, const std::vector<unsigned int>& indices) {
+		m_vertices = vertices;
+		m_indices = indices;
+	}
 
-    SpriteData() {}
     ~SpriteData() {}
 };
