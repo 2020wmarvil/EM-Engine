@@ -65,14 +65,11 @@ int main() {
 
 	// load sprites
 	SpriteLoader loader;
-	Entity square(loader.LoadSprite("../res/sprites/square.ems"));
+	Entity player(loader.LoadSprite("../res/sprites/player.ems"));
+	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"));
 
 	// create shader
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
-
-	// set initial uniforms
-	shader.Bind();	
-	shader.SetUniformVec4f("u_Color", glm::vec4(0.8f, 0.25f, 0.4f, 1.0f));
 
 	// create renderer
 	Renderer renderer;
@@ -84,15 +81,15 @@ int main() {
 	while(!glfwWindowShouldClose(window)) {
 		processInput(window);
 
-		// clear the buffers
-		renderer.Clear();
-
 		// update the MVP matrices
 		glm::mat4 projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f);  
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 vp = projection * view;
 
-		// update uniforms
+		// render
+		renderer.Clear();
+
+		// update shader and render player
 		{
 			shader.Bind();
 
@@ -105,11 +102,29 @@ int main() {
 			glm::mat4 mvp = vp * model;
 
 			shader.SetUniformMat4f("u_MVP", mvp);
+			shader.SetUniformVec4f("u_Color", glm::vec4(0.8f, 0.25f, 0.4f, 1.0f));
+
+			player.Bind();
+			renderer.Draw(player, shader);
 		}
 
-		// render
-		square.Bind();
-		renderer.Draw(square, shader);
+		// update shader and render floor
+		{
+			shader.Bind();
+
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(400.0f, 500.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+
+			glm::mat4 mvp = vp * model;
+
+			shader.SetUniformMat4f("u_MVP", mvp);
+			shader.SetUniformVec4f("u_Color", glm::vec4(0.54f, 0.27f, 0.07f, 1.0f));
+
+			floor.Bind();
+			renderer.Draw(floor, shader);
+		}
 
 		// swap the buffers and poll for events
 	 	glfwSwapBuffers(window);
