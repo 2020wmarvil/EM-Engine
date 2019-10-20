@@ -47,7 +47,7 @@ int main() {
 
 	glfwSetWindowTitle(window, "EM Engine");
 	glfwSetWindowAspectRatio(window, WIDTH, HEIGHT);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -87,20 +87,28 @@ int main() {
 		// clear the buffers
 		renderer.Clear();
 
-
-		// bind entities
-		square.Bind();
+		// update the MVP matrices
+		glm::mat4 projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f);  
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 vp = projection * view;
 
 		// update uniforms
-		shader.Bind();
-		shader.SetUniformVec3f("u_Transform", glm::vec3(sin(glfwGetTime())/2, cos(glfwGetTime())/2, 0.0f));
-		glm::mat4 Model = glm::mat4(1.0f);
-		Model = glm::translate(Model,glm::vec3(sin(glfwGetTime())/2,cos(glfwGetTime())/2,0.0f));
-		shader.SetUniformMat4f("u_Model",Model);
-		shader.SetUniformMat4f("u_View",glm::mat4(1.0f));
-		shader.SetUniformMat4f("u_Projection",glm::mat4(1.0f));
+		{
+			shader.Bind();
+
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(400.0f, 300.0f, 0.0f));
+			float angle = glfwGetTime()*glfwGetTime()*glfwGetTime();
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+
+			glm::mat4 mvp = vp * model;
+
+			shader.SetUniformMat4f("u_MVP", mvp);
+		}
 
 		// render
+		square.Bind();
 		renderer.Draw(square, shader);
 
 		// swap the buffers and poll for events
