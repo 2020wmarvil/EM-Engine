@@ -2,8 +2,8 @@
 
 layout(location = 0) in vec4 position;
 
-uniform vec3 u_Move;
+uniform vec3 u_Transform;
 
 void main() {
-	gl_Position = position + vec4(u_Move, 0.0f);
+	gl_Position = vec4(u_Transform, 0.0f) + position;
 }

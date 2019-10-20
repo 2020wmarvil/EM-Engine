@@ -15,7 +15,10 @@
 #include <chrono>
 
 // our library imports
+#include "Entity.h"
 #include "Shader.h"
+#include "SpriteLoader.h"
+#include "SpriteData.h"
 
 // constants
 #define WIDTH 1920
@@ -60,17 +63,33 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// object data 
-	float positions[] = { 
+//	float positions[] = { 
+//		-0.5f,  0.5f,
+//		 0.5f,  0.5f,
+//		 0.5f, -0.5f,
+//		-0.5f, -0.5f
+//	};
+//
+//	unsigned int indices[] = {
+//		0, 1, 2,
+//		0, 2, 3
+//	};
+
+	std::vector<float> positions = { 
 		-0.5f,  0.5f,
 		 0.5f,  0.5f,
 		 0.5f, -0.5f,
 		-0.5f, -0.5f
 	};
 
-	unsigned int indices[] {
+	std::vector<unsigned int> indices = {
 		0, 1, 2,
 		0, 2, 3
 	};
+
+	// SpriteLoader loader
+	SpriteData squareData; // = loader.loadSprite("../res/sprites/square.ems");
+	Entity square(squareData);
 
 	// create the vertex objects
 	unsigned int vao;
@@ -80,14 +99,17 @@ int main() {
 	unsigned int vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_DYNAMIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, positions.size()*sizeof(float), positions.data(), GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8, (const void*)0);
 
 	unsigned int ibo;
 	glGenBuffers(1, &ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
+	unsigned int index_size = indices.size()*sizeof(unsigned int);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_size, indices.data(), GL_DYNAMIC_DRAW);
 
 	// create the shader
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
@@ -111,15 +133,16 @@ int main() {
 
 		// bind everything
 		shader.Bind();
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	//	glBindVertexArray(vao);
+	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		square.Bind();
 
 		// update uniforms
 		shader.Bind();
-		shader.SetUniformVec3f("u_Move", glm::vec3(sin(glfwGetTime())/2, cos(glfwGetTime())/2, 0.0f));
+		shader.SetUniformVec3f("u_Transform", glm::vec3(sin(glfwGetTime())/2, cos(glfwGetTime())/2, 0.0f));
 
 		// render
-		glDrawElements(GL_TRIANGLES, sizeof(indices)/3, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, index_size/3, GL_UNSIGNED_INT, nullptr);
 
 		// swap the buffers and poll for events
 	 	glfwSwapBuffers(window);
