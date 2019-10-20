@@ -72,7 +72,8 @@ int main() {
 	// set initial uniforms
 	shader.Bind();	
 	shader.SetUniformVec4f("u_Color", glm::vec4(0.8f, 0.25f, 0.4f, 1.0f));
-
+//	glm::mat4 transform = glm::mat4(1.0f);
+//	shader.SetUniformMat4f("u_Transform2",transform);
 	std::cout << "Error code: " << glGetError() << std::endl;
 
 	double lasttime = glfwGetTime();
@@ -93,7 +94,11 @@ int main() {
 		// update uniforms
 		shader.Bind();
 		shader.SetUniformVec3f("u_Transform", glm::vec3(sin(glfwGetTime())/2, cos(glfwGetTime())/2, 0.0f));
-
+		glm::mat4 Model = glm::mat4(1.0f);
+		Model = glm::translate(Model,glm::vec3(sin(glfwGetTime())/2,cos(glfwGetTime())/2,0.0f));
+		shader.SetUniformMat4f("u_Model",Model);
+		shader.SetUniformMat4f("u_View",glm::mat4(1.0f));
+		shader.SetUniformMat4f("u_Projection",glm::mat4(1.0f));
 		// render
 		//glDrawElements(GL_TRIANGLES, indices.size()*sizeof(unsigned int)/3, GL_UNSIGNED_INT, nullptr);
 		glDrawElements(GL_TRIANGLES, 6*sizeof(unsigned int)/3, GL_UNSIGNED_INT, nullptr);
