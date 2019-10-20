@@ -1,6 +1,7 @@
 add_library(source STATIC 
 	Entity.cpp	Entity.h
 	Shader.cpp	Shader.h
+	Renderer.cpp	Renderer.h
 	SpriteLoader.h	SpriteData.h
 
 	VertexArray.h	VertexArray.cpp VertexBufferLayout.h

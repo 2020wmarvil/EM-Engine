@@ -16,6 +16,7 @@
 
 // our library imports
 #include "Entity.h"
+#include "Renderer.h"
 #include "Shader.h"
 #include "SpriteLoader.h"
 #include "SpriteData.h"
@@ -66,29 +67,28 @@ int main() {
 	SpriteLoader loader;
 	Entity square(loader.LoadSprite("../res/sprites/square.ems"));
 
-	// create the shader
+	// create shader
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
 
 	// set initial uniforms
 	shader.Bind();	
 	shader.SetUniformVec4f("u_Color", glm::vec4(0.8f, 0.25f, 0.4f, 1.0f));
-//	glm::mat4 transform = glm::mat4(1.0f);
-//	shader.SetUniformMat4f("u_Transform2",transform);
+
+	// create renderer
+	Renderer renderer;
+
 	std::cout << "Error code: " << glGetError() << std::endl;
 
 	double lasttime = glfwGetTime();
 
-	// game loop
 	while(!glfwWindowShouldClose(window)) {
-		// input
 		processInput(window);
 
 		// clear the buffers
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		renderer.Clear();
 
-		// bind everything
-		shader.Bind();
+
+		// bind entities
 		square.Bind();
 
 		// update uniforms
@@ -99,9 +99,9 @@ int main() {
 		shader.SetUniformMat4f("u_Model",Model);
 		shader.SetUniformMat4f("u_View",glm::mat4(1.0f));
 		shader.SetUniformMat4f("u_Projection",glm::mat4(1.0f));
+
 		// render
-		//glDrawElements(GL_TRIANGLES, indices.size()*sizeof(unsigned int)/3, GL_UNSIGNED_INT, nullptr);
-		glDrawElements(GL_TRIANGLES, 6*sizeof(unsigned int)/3, GL_UNSIGNED_INT, nullptr);
+		renderer.Draw(square, shader);
 
 		// swap the buffers and poll for events
 	 	glfwSwapBuffers(window);

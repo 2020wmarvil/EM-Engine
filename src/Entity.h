@@ -17,4 +17,6 @@ public:
 
     void Bind() const;
     void Unbind() const;
+
+    inline unsigned int GetIBOSize() const { return m_IBO.GetSize(); }
 };
