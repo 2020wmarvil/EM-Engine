@@ -65,8 +65,10 @@ int main() {
 
 	// load sprites
 	SpriteLoader loader;
-	Entity player(loader.LoadSprite("../res/sprites/player.ems"));
-	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"));
+	Entity player(loader.LoadSprite("../res/sprites/player.ems"), 
+		glm::vec3(400.0f, 300.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
+	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"), 
+		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	// create shader
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
@@ -93,12 +95,9 @@ int main() {
 		{
 			shader.Bind();
 
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(400.0f, 300.0f, 0.0f));
-			float angle = glfwGetTime()*glfwGetTime()*glfwGetTime();
-			model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
-			model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+			player.SetAngle(glfwGetTime()*glfwGetTime()*glfwGetTime());
 
+			glm::mat4 model = player.ComputeModel();
 			glm::mat4 mvp = vp * model;
 
 			shader.SetUniformMat4f("u_MVP", mvp);
@@ -112,11 +111,7 @@ int main() {
 		{
 			shader.Bind();
 
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(400.0f, 500.0f, 0.0f));
-			model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-			model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-
+			glm::mat4 model = floor.ComputeModel();
 			glm::mat4 mvp = vp * model;
 
 			shader.SetUniformMat4f("u_MVP", mvp);
