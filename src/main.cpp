@@ -16,6 +16,7 @@
 
 // our library imports
 #include "Entity.h"
+#include "Player.h"
 #include "Renderer.h"
 #include "Shader.h"
 #include "SpriteLoader.h"
@@ -65,7 +66,7 @@ int main() {
 
 	// load sprites
 	SpriteLoader loader;
-	Entity player(loader.LoadSprite("../res/sprites/player.ems"), 
+	Player player(loader.LoadSprite("../res/sprites/player.ems"), 
 		glm::vec3(400.0f, 300.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"), 
 		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));

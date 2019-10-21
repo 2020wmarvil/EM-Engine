@@ -1,5 +1,4 @@
 add_library(source STATIC 
-	Entity.cpp	Entity.h
 	Shader.cpp	Shader.h
 	Renderer.cpp	Renderer.h
 	SpriteLoader.h	SpriteData.h
@@ -7,6 +6,9 @@ add_library(source STATIC
 	VertexArray.h	VertexArray.cpp VertexBufferLayout.h
 	VertexBuffer.h	VertexBuffer.cpp
 	IndexBuffer.h	IndexBuffer.cpp
+
+	Entity.cpp	Entity.h
+	Player.cpp 	Player.h
 )
 
 target_include_directories( source PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} vendor )
