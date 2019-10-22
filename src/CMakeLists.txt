@@ -2,6 +2,7 @@ add_library(source STATIC
 	Shader.cpp	Shader.h
 	Renderer.cpp	Renderer.h
 	SpriteLoader.h	SpriteData.h
+	Camera.cpp	Camera.h
 
 	VertexArray.h	VertexArray.cpp VertexBufferLayout.h
 	VertexBuffer.h	VertexBuffer.cpp

@@ -17,6 +17,7 @@
 // our library imports
 #include "Entity.h"
 #include "Player.h"
+#include "Camera.h"
 #include "Renderer.h"
 #include "Shader.h"
 #include "SpriteLoader.h"
@@ -71,6 +72,9 @@ int main() {
 	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"), 
 		glm::vec3(400.0f, 300.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
+	// create camera
+	Camera camera(&player, WIDTH/2, HEIGHT/2);
+
 	// create shader
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
 
@@ -85,13 +89,12 @@ int main() {
 		processInput(window, player);
 
 		// update the world	- this should be done cleaner, maybe one update call that updates the whole scene?
-		player.SetAngle(glfwGetTime()*glfwGetTime()*glfwGetTime());
 		player.Update();
 		floor.Update();
 
 		// update the MVP matrices
 		glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT, -1.0f, 1.0f);  
-		glm::mat4 view = glm::mat4(1.0f);	// camera.GetViewMatrix();  after camera abstraction :)
+		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 vp = projection * view;
 
 		// prepare for rendering
