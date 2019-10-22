@@ -27,7 +27,7 @@
 #define HEIGHT 1080
 #define TARGET_FPS 600
 
-void processInput(GLFWwindow *window);
+void processInput(GLFWwindow *window, Player& player);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 ShaderProgramSource ParseShader(const std::string& vsFilepath, const std::string& fsFilepath);
@@ -67,9 +67,9 @@ int main() {
 	// load sprites
 	SpriteLoader loader;
 	Player player(loader.LoadSprite("../res/sprites/player.ems"), 
-		glm::vec3(400.0f, 300.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
+		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"), 
-		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		glm::vec3(400.0f, 300.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	// create shader
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
@@ -82,21 +82,24 @@ int main() {
 	double lasttime = glfwGetTime();
 
 	while(!glfwWindowShouldClose(window)) {
-		processInput(window);
+		processInput(window, player);
+
+		// update the world	- this should be done cleaner, maybe one update call that updates the whole scene?
+		player.SetAngle(glfwGetTime()*glfwGetTime()*glfwGetTime());
+		player.Update();
+		floor.Update();
 
 		// update the MVP matrices
-		glm::mat4 projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f);  
-		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT, -1.0f, 1.0f);  
+		glm::mat4 view = glm::mat4(1.0f);	// camera.GetViewMatrix();  after camera abstraction :)
 		glm::mat4 vp = projection * view;
 
-		// render
+		// prepare for rendering
 		renderer.Clear();
 
 		// update shader and render player
 		{
 			shader.Bind();
-
-			player.SetAngle(glfwGetTime()*glfwGetTime()*glfwGetTime());
 
 			glm::mat4 model = player.ComputeModel();
 			glm::mat4 mvp = vp * model;
@@ -142,9 +145,25 @@ int main() {
 	return 0;
 }
  
-void processInput(GLFWwindow *window) {
+void processInput(GLFWwindow *window, Player& player) {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+	}
+
+	if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		player.ScaleVelocityX(1);
+	if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		player.ScaleVelocityX(-1);
+	if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		player.ScaleVelocityY(1);
+	if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		player.ScaleVelocityY(-1);
+	
+	if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE) {
+		player.ScaleVelocityX(0);
+	}
+	if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
+		player.ScaleVelocityY(0);
 	}
 }
 

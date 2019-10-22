@@ -44,3 +44,8 @@ glm::mat4 Entity::ComputeModel() {
 
     return model;
 }
+
+void Entity::Update() {     // change this to a general update call? or perhaps entity has an update call which this class will override?
+    // recalculte velocity using acceleration?
+    m_Pos += m_Velocity;    // normalize velocity? mulitply by timestep?
+}
