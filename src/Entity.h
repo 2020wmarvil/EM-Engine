@@ -8,6 +8,7 @@
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "Shader.h"
 
 class Entity {
 private:
@@ -31,6 +32,7 @@ public:
     void Unbind() const;
 
     glm::mat4 ComputeModel();
+    void Draw(const Shader& shader) const;
     void Update();
 
     void SetPosition(glm::vec3 position) { m_Pos = position; }

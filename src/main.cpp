@@ -18,7 +18,6 @@
 #include "Entity.h"
 #include "Player.h"
 #include "Camera.h"
-#include "Renderer.h"
 #include "Shader.h"
 #include "SpriteLoader.h"
 #include "SpriteData.h"
@@ -78,9 +77,6 @@ int main() {
 	// create shader
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
 
-	// create renderer
-	Renderer renderer;
-
 	std::cout << "Error code: " << glGetError() << std::endl;
 
 	double lasttime = glfwGetTime();
@@ -98,7 +94,8 @@ int main() {
 		glm::mat4 vp = projection * view;
 
 		// prepare for rendering
-		renderer.Clear();
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		// update shader and render player
 		{
@@ -111,7 +108,7 @@ int main() {
 			shader.SetUniformVec4f("u_Color", glm::vec4(0.8f, 0.25f, 0.4f, 1.0f));
 
 			player.Bind();
-			renderer.Draw(player, shader);
+			player.Draw(shader);
 		}
 
 		// update shader and render floor
@@ -125,7 +122,7 @@ int main() {
 			shader.SetUniformVec4f("u_Color", glm::vec4(0.54f, 0.27f, 0.07f, 1.0f));
 
 			floor.Bind();
-			renderer.Draw(floor, shader);
+			floor.Draw(shader);
 		}
 
 		// swap the buffers and poll for events

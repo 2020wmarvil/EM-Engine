@@ -36,6 +36,13 @@ void Entity::Unbind() const {
     m_IBO.Unbind();
 }
 
+void Entity::Draw(const Shader& shader) const {
+	Bind();
+	shader.Bind();
+
+	glDrawElements(GL_TRIANGLES, GetIBOSize() / 3, GL_UNSIGNED_INT, nullptr);
+}
+
 glm::mat4 Entity::ComputeModel() {
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, m_Pos);
