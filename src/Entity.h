@@ -4,6 +4,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+#include <iostream>
+
 #include "SpriteData.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -33,7 +35,7 @@ public:
 
     glm::mat4 ComputeModel();
     void Draw(const Shader& shader) const;
-    void Update();
+    void Update(float dt);
 
     void SetPosition(glm::vec3 position) { m_Pos = position; }
     void SetScale(glm::vec3 scale) { m_Scale = scale; }

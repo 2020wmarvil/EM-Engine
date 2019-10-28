@@ -52,7 +52,16 @@ glm::mat4 Entity::ComputeModel() {
     return model;
 }
 
-void Entity::Update() {     // change this to a general update call? or perhaps entity has an update call which this class will override?
-    // recalculte velocity using acceleration?
-    m_Pos += m_Velocity;    // normalize velocity? mulitply by timestep?
+void Entity::Update(float dt) {     // change this to a general update call? or perhaps entity has an update call which this class will override?
+    float pixels_per_meter = 16.0f;
+    glm::vec3 m_Acceleration = glm::vec3(0.0f, -9.81f, 0.0f);
+
+    m_Velocity += m_Acceleration * dt;
+
+    if (m_Pos.y < 0.0f && m_Velocity.y < 0.0f) {
+        m_Velocity.y = 0.0f;
+        m_Pos.y = 0.0f;
+    }
+
+    m_Pos += m_Velocity * dt * pixels_per_meter;
 }
