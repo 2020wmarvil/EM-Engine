@@ -21,6 +21,7 @@
 #include "Shader.h"
 #include "SpriteLoader.h"
 #include "SpriteData.h"
+#include "Texture.h"
 
 // constants
 #define WIDTH 1920
@@ -78,6 +79,11 @@ int main() {
 
 	// create shader
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
+	shader.Bind();
+
+	Texture playerTex("../res/sprites/Hero.png");	
+	playerTex.Bind(0);
+	shader.SetUniform1i("u_Texture", 0);
 
 	std::cout << "Error code: " << glGetError() << std::endl;
 
@@ -120,31 +126,31 @@ int main() {
 		}
 
 		// update shader and render wall
-		{
-			shader.Bind();
-
-			glm::mat4 model = floor.ComputeModel();
-			glm::mat4 mvp = vp * model;
-
-			shader.SetUniformMat4f("u_MVP", mvp);
-			shader.SetUniformVec4f("u_Color", glm::vec4(0.54f, 0.27f, 0.07f, 1.0f));
-
-			floor.Bind();
-			floor.Draw(shader);
-		}
-		// update shader and render floor
-		{
-			shader.Bind();
-
-			glm::mat4 model = wall.ComputeModel();
-			glm::mat4 mvp = vp * model;
-
-			shader.SetUniformMat4f("u_MVP", mvp);
-			shader.SetUniformVec4f("u_Color", glm::vec4(0.54f, 0.27f, 0.07f, 1.0f));
-
-			wall.Bind();
-			wall.Draw(shader);
-		}
+//		{
+//			shader.Bind();
+//
+//			glm::mat4 model = floor.ComputeModel();
+//			glm::mat4 mvp = vp * model;
+//
+//			shader.SetUniformMat4f("u_MVP", mvp);
+//			shader.SetUniformVec4f("u_Color", glm::vec4(0.54f, 0.27f, 0.07f, 1.0f));
+//
+//			floor.Bind();
+//			floor.Draw(shader);
+//		}
+//		// update shader and render floor
+//		{
+//			shader.Bind();
+//
+//			glm::mat4 model = wall.ComputeModel();
+//			glm::mat4 mvp = vp * model;
+//
+//			shader.SetUniformMat4f("u_MVP", mvp);
+//			shader.SetUniformVec4f("u_Color", glm::vec4(0.54f, 0.27f, 0.07f, 1.0f));
+//
+//			wall.Bind();
+//			wall.Draw(shader);
+//		}
 
 		// swap the buffers and poll for events
 	 	glfwSwapBuffers(window);

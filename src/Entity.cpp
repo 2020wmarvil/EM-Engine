@@ -7,6 +7,7 @@ Entity::Entity(const SpriteData& data)
 {
 	VertexBufferLayout layout;
 	layout.PushFloat(2);
+	layout.PushFloat(2);
 	m_VAO.AddBuffer(m_VBO, layout);
 
 }
@@ -17,6 +18,7 @@ Entity::Entity(const SpriteData& data, glm::vec3 position, float angle, glm::vec
       m_Pos(position), m_Angle(angle), m_Scale(scale)
 {
 	VertexBufferLayout layout;
+	layout.PushFloat(2);
 	layout.PushFloat(2);
 	m_VAO.AddBuffer(m_VBO, layout);
 
