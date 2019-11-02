@@ -65,13 +65,13 @@ int main() {
 
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	glEnable(GL_DEPTH_TEST);  
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// load sprites
 	SpriteLoader loader;
-	Player player(loader.LoadSprite("../res/sprites/player.ems"), 
+	Player player(loader.LoadSprite("../res/sprites/player.ems"), "../res/sprites/Hero.png", 8, 14,
 		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 //	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"), 
 //		glm::vec3(400.0f, -130.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
@@ -85,16 +85,13 @@ int main() {
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
 	shader.Bind();
 
-	Texture playerTex("../res/sprites/Hero.png");	
-	playerTex.Bind(0);
-	shader.SetUniform1i("u_Texture", 0);
-
 	std::cout << "Error code: " << glGetError() << std::endl;
 
 	double lasttime = glfwGetTime();
 
 	float lastTime = glfwGetTime();
 
+	unsigned char a = 0;
 	while(!glfwWindowShouldClose(window)) {
   		float current = glfwGetTime();
   		float elapsed = current - lastTime;
@@ -121,9 +118,17 @@ int main() {
 			glm::mat4 mvp = vp * model;
 
 			shader.SetUniformMat4f("u_MVP", mvp);
-			shader.SetUniformVec4f("u_Color", glm::vec4(0.8f, 0.25f, 0.4f, 1.0f));
+			//shader.SetUniformVec4f("u_Color", glm::vec4(0.8f, 0.25f, 0.4f, 1.0f));
+			int texX = a%8;
+			int texY = a%3;
 
-			player.Bind();
+			std::cout << a << "\n\t" << texX << " " << texY << "\n";
+			a++;
+
+			shader.SetUniformVec2f("u_TexOffset", glm::vec2(texX*0.125f, texY*0.3333));
+			
+
+			player.Bind(shader);
 			player.Draw(shader);
 		}
 

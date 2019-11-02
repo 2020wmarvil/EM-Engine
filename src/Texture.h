@@ -11,7 +11,7 @@ private:
     unsigned char* m_LocalBuffer;
     int m_Width, m_Height, m_BBP;
 public:
-    Texture(const std::string& filepath);
+    Texture(const std::string& filepath, int texWidth, int texHeight);
     ~Texture();
 
     void Bind(unsigned int slot=0) const;

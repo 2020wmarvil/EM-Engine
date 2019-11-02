@@ -1,35 +1,38 @@
 #include "Entity.h"
 
-Entity::Entity(const SpriteData& data)
+Entity::Entity(const SpriteData& data, const std::string& texPath, int texWidth, int texHeight)
     : m_VBO(data.m_vertices.data(), data.m_vertices.size() * sizeof(float), GL_DYNAMIC_DRAW),
       m_IBO(data.m_indices.data(), data.m_indices.size() * sizeof(unsigned int), GL_DYNAMIC_DRAW),
+      m_Texture(texPath, texWidth, texHeight), 
       m_Pos(glm::vec3(0.0f)), m_Angle(0.0f), m_Scale(glm::vec3(1.0f))
 {
 	VertexBufferLayout layout;
 	layout.PushFloat(2);
 	layout.PushFloat(2);
 	m_VAO.AddBuffer(m_VBO, layout);
-
 }
 
-Entity::Entity(const SpriteData& data, glm::vec3 position, float angle, glm::vec3 scale)
+Entity::Entity(const SpriteData& data, const std::string& texPath, int texWidth, int texHeight,
+            glm::vec3 position, float angle, glm::vec3 scale)
     : m_VBO(data.m_vertices.data(), data.m_vertices.size() * sizeof(float), GL_DYNAMIC_DRAW),
       m_IBO(data.m_indices.data(), data.m_indices.size() * sizeof(unsigned int), GL_DYNAMIC_DRAW),
-      m_Pos(position), m_Angle(angle), m_Scale(scale)
+      m_Pos(position), m_Angle(angle), m_Scale(scale), m_Texture(texPath, texWidth, texHeight)
 {
 	VertexBufferLayout layout;
 	layout.PushFloat(2);
 	layout.PushFloat(2);
 	m_VAO.AddBuffer(m_VBO, layout);
-
 }
 
 Entity::~Entity() {}
 
-void Entity::Bind() const {
+void Entity::Bind(Shader& shader) const {
     m_VAO.Bind();
     m_VBO.Bind();
     m_IBO.Bind();
+
+    m_Texture.Bind(0);
+	shader.SetUniform1i("u_Texture", 0);
 }
 
 void Entity::Unbind() const {
@@ -38,8 +41,8 @@ void Entity::Unbind() const {
     m_IBO.Unbind();
 }
 
-void Entity::Draw(const Shader& shader) const {
-	Bind();
+void Entity::Draw(Shader& shader) const {
+	Bind(shader);
 	shader.Bind();
 
 	glDrawElements(GL_TRIANGLES, GetIBOSize() / 3, GL_UNSIGNED_INT, nullptr);

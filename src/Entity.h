@@ -11,12 +11,15 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
+#include "Texture.h"
 
 class Entity {
 private:
     VertexArray m_VAO;
     VertexBuffer m_VBO;
     IndexBuffer m_IBO;
+
+    Texture m_Texture;
 protected:
     glm::vec3 m_Pos;
     glm::vec3 m_Scale;
@@ -26,15 +29,16 @@ protected:
 
     const glm::vec3 m_AxisOfRotation = glm::vec3(0.0f, 0.0f, 1.0f);
 public: 
-    Entity(const SpriteData& data);
-    Entity(const SpriteData& data, glm::vec3 position, float angle, glm::vec3 scale);
+    Entity(const SpriteData& data, const std::string& texPath, int texWidth, int texHeight);
+    Entity(const SpriteData& data, const std::string& texPath, int texWidth, int texHeight, 
+            glm::vec3 position, float angle, glm::vec3 scale);
     ~Entity();
 
-    void Bind() const;
+    void Bind(Shader& shader) const;
     void Unbind() const;
 
     glm::mat4 ComputeModel();
-    void Draw(const Shader& shader) const;
+    void Draw(Shader& shader) const;
     void Update(float dt);
 
     void SetPosition(glm::vec3 position) { m_Pos = position; }
