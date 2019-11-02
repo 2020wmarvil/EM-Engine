@@ -42,6 +42,10 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	// GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	// const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	// GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "My Title", monitor, NULL);
+
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", NULL, NULL);
 	glfwMakeContextCurrent(window);
 
@@ -69,10 +73,10 @@ int main() {
 	SpriteLoader loader;
 	Player player(loader.LoadSprite("../res/sprites/player.ems"), 
 		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
-	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"), 
-		glm::vec3(400.0f, -130.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	Entity wall(loader.LoadSprite("../res/sprites/wall.ems"), 
-		glm::vec3(775.0f, 300.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+//	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"), 
+//		glm::vec3(400.0f, -130.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+//	Entity wall(loader.LoadSprite("../res/sprites/wall.ems"), 
+//		glm::vec3(775.0f, 300.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	// create camera
 	Camera camera(&player, WIDTH/2, HEIGHT/2);
@@ -99,8 +103,6 @@ int main() {
 
 		// update the world	- this should be done cleaner, maybe one update call that updates the whole scene?
 		player.Update(elapsed);
-		// floor.Update(elapsed);
-		// wall.Update(elapsed);
 
 		// update the MVP matrices
 		glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT, -1.0f, 1.0f);  
@@ -124,33 +126,6 @@ int main() {
 			player.Bind();
 			player.Draw(shader);
 		}
-
-		// update shader and render wall
-//		{
-//			shader.Bind();
-//
-//			glm::mat4 model = floor.ComputeModel();
-//			glm::mat4 mvp = vp * model;
-//
-//			shader.SetUniformMat4f("u_MVP", mvp);
-//			shader.SetUniformVec4f("u_Color", glm::vec4(0.54f, 0.27f, 0.07f, 1.0f));
-//
-//			floor.Bind();
-//			floor.Draw(shader);
-//		}
-//		// update shader and render floor
-//		{
-//			shader.Bind();
-//
-//			glm::mat4 model = wall.ComputeModel();
-//			glm::mat4 mvp = vp * model;
-//
-//			shader.SetUniformMat4f("u_MVP", mvp);
-//			shader.SetUniformVec4f("u_Color", glm::vec4(0.54f, 0.27f, 0.07f, 1.0f));
-//
-//			wall.Bind();
-//			wall.Draw(shader);
-//		}
 
 		// swap the buffers and poll for events
 	 	glfwSwapBuffers(window);
@@ -190,9 +165,6 @@ void processInput(GLFWwindow *window, Player& player) {
 	
 	if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE) {
 		player.ScaleVelocityX(0);
-	}
-	if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
-//		player.ScaleVelocityY(0);
 	}
 }
 
