@@ -2,10 +2,8 @@
 
 #include <GL/glew.h>
 
-#include <iostream>
 #include <sstream>
 #include <fstream>
-#include <iostream>
 
 Shader::Shader(const std::string& vsFilepath, const std::string& fsFilepath)
     : m_RendererID(0), m_VertexFilepath(vsFilepath), m_FragmentFilepath(fsFilepath) 

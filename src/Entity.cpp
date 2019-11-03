@@ -1,9 +1,9 @@
 #include "Entity.h"
 
-Entity::Entity(const SpriteData& data, const std::string& texPath, int texWidth, int texHeight)
+Entity::Entity(const SpriteData& data, const std::string& texPath, int texRows, int texCols)
     : m_VBO(data.m_vertices.data(), data.m_vertices.size() * sizeof(float), GL_DYNAMIC_DRAW),
       m_IBO(data.m_indices.data(), data.m_indices.size() * sizeof(unsigned int), GL_DYNAMIC_DRAW),
-      m_Texture(texPath, texWidth, texHeight), 
+      m_Texture(texPath, texRows, texCols), 
       m_Pos(glm::vec3(0.0f)), m_Angle(0.0f), m_Scale(glm::vec3(1.0f))
 {
 	VertexBufferLayout layout;
@@ -12,11 +12,11 @@ Entity::Entity(const SpriteData& data, const std::string& texPath, int texWidth,
 	m_VAO.AddBuffer(m_VBO, layout);
 }
 
-Entity::Entity(const SpriteData& data, const std::string& texPath, int texWidth, int texHeight,
+Entity::Entity(const SpriteData& data, const std::string& texPath, int texRows, int texCols,
             glm::vec3 position, float angle, glm::vec3 scale)
     : m_VBO(data.m_vertices.data(), data.m_vertices.size() * sizeof(float), GL_DYNAMIC_DRAW),
       m_IBO(data.m_indices.data(), data.m_indices.size() * sizeof(unsigned int), GL_DYNAMIC_DRAW),
-      m_Pos(position), m_Angle(angle), m_Scale(scale), m_Texture(texPath, texWidth, texHeight)
+      m_Pos(position), m_Angle(angle), m_Scale(scale), m_Texture(texPath, texRows, texCols)
 {
 	VertexBufferLayout layout;
 	layout.PushFloat(2);
@@ -72,5 +72,5 @@ void Entity::Update(float dt) {     // change this to a general update call? or 
 }
 
 glm::vec2 Entity::GetTexOffset() const { 
-    return glm::vec2(m_Sprite % m_Cols, (m_Rows-1)-((m_Sprite / m_Cols) % m_Rows)) * glm::vec2(m_SpriteWidth, m_SpriteHeight); 
+    return glm::vec2(m_Sprite % m_Cols, (m_Rows-1)-((m_Sprite / m_Cols) % m_Rows)) * glm::vec2(m_Texture.GetSpriteWidth(), m_Texture.GetSpriteHeight()); 
 }

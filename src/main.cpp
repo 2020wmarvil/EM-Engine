@@ -71,7 +71,7 @@ int main() {
 
 	// load sprites
 	SpriteLoader loader;
-	Player player(loader.LoadSprite("../res/sprites/player.ems"), "../res/sprites/Hero.png", 8, 14,
+	Player player(loader.LoadSprite("../res/sprites/player.ems"), "../res/sprites/Hero.png", 8, 3,
 		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 //	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"), 
 //		glm::vec3(400.0f, -130.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
