@@ -91,7 +91,7 @@ int main() {
 
 	float lastTime = glfwGetTime();
 
-	unsigned char a = 0;
+	unsigned char sprite = 0;
 	while(!glfwWindowShouldClose(window)) {
   		float current = glfwGetTime();
   		float elapsed = current - lastTime;
@@ -118,15 +118,8 @@ int main() {
 			glm::mat4 mvp = vp * model;
 
 			shader.SetUniformMat4f("u_MVP", mvp);
-			//shader.SetUniformVec4f("u_Color", glm::vec4(0.8f, 0.25f, 0.4f, 1.0f));
-			int texX = a%8;
-			int texY = a%3;
-
-			std::cout << a << "\n\t" << texX << " " << texY << "\n";
-			a++;
-
-			shader.SetUniformVec2f("u_TexOffset", glm::vec2(texX*0.125f, texY*0.3333));
-			
+			player.SetSprite(sprite++);
+			shader.SetUniformVec2f("u_TexOffset", player.GetTexOffset());
 
 			player.Bind(shader);
 			player.Draw(shader);

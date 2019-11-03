@@ -2,7 +2,6 @@
 
 in vec2 v_TexCoord;
 
-uniform vec4 u_Color;
 uniform vec2 u_TexOffset;
 uniform sampler2D u_Texture;
 

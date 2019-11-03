@@ -70,3 +70,7 @@ void Entity::Update(float dt) {     // change this to a general update call? or 
 
     m_Pos += m_Velocity * dt * pixels_per_meter;
 }
+
+glm::vec2 Entity::GetTexOffset() const { 
+    return glm::vec2(m_Sprite % m_Cols, (m_Rows-1)-((m_Sprite / m_Cols) % m_Rows)) * glm::vec2(m_SpriteWidth, m_SpriteHeight); 
+}

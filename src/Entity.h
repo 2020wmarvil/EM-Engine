@@ -20,6 +20,11 @@ private:
     IndexBuffer m_IBO;
 
     Texture m_Texture;
+    unsigned char m_Sprite=12;
+    unsigned char m_Rows=3;
+    unsigned char m_Cols=8;
+    float m_SpriteWidth = 1.0/(float)m_Cols;
+    float m_SpriteHeight = 1.0/(float)m_Rows;
 protected:
     glm::vec3 m_Pos;
     glm::vec3 m_Scale;
@@ -44,7 +49,9 @@ public:
     void SetPosition(glm::vec3 position) { m_Pos = position; }
     void SetScale(glm::vec3 scale) { m_Scale = scale; }
     void SetAngle(float angle) { m_Angle = angle; }
+    void SetSprite(unsigned int sprite) { m_Sprite = sprite; }
 
+    glm::vec2 GetTexOffset() const;
     glm::vec3 GetPosition() const { return m_Pos; }
 
     inline unsigned int GetIBOSize() const { return m_IBO.GetSize(); }
