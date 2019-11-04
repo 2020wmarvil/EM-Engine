@@ -1,6 +1,5 @@
 add_library(source STATIC 
 	Shader.cpp	Shader.h
-	SpriteLoader.h	SpriteData.h
 	Texture.cpp	Texture.h
 	Camera.cpp	Camera.h
 
