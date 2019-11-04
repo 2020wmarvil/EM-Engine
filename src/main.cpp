@@ -70,11 +70,11 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// load sprites
-	Player player("../res/sprites/Hero.png", 8, 3,
+	Player player("../res/sprites/hero.png", 3, 8,
 		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
-	Terrain floor("../res/sprites/Floor.png", 1, 1,
+	Terrain floor("../res/sprites/floor.png", 1, 1,
 		glm::vec3(400.0f, -130.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	Terrain wall("../res/sprites/Floor.png", 1, 1,
+	Terrain wall("../res/sprites/wall.png", 1, 1,
 		glm::vec3(775.0f, 300.0f, 0.0f), 90.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	std::vector<const Entity*> entities = { &player, &floor, &wall };

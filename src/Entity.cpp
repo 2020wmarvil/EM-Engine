@@ -2,11 +2,14 @@
 
 std::vector<unsigned int> indices = { 0, 1, 2, 0, 2, 3 };
 
-Entity::Entity(const std::vector<float>& vertices, const std::string& texPath, int texRows, int texCols,
+Entity::Entity(const std::vector<float>& vertices, float width, float height,
+            const std::string& texPath, int texRows, int texCols,
             glm::vec3 position, float angle, glm::vec3 scale)
     : m_VBO(vertices.data(), vertices.size() * sizeof(float), GL_DYNAMIC_DRAW),
       m_IBO(indices.data(), indices.size() * sizeof(unsigned int), GL_DYNAMIC_DRAW),
-      m_Pos(position), m_Angle(angle), m_Scale(scale), m_Texture(texPath, texRows, texCols)
+      m_Width(width), m_Height(height),
+      m_Pos(position), m_Angle(angle), m_Scale(scale), 
+      m_Texture(texPath, texRows, texCols), m_Rows(texRows), m_Cols(texCols)
 {
 	VertexBufferLayout layout;
 	layout.PushFloat(2);

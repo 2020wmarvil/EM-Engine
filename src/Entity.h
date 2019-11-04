@@ -17,9 +17,9 @@ private:
     IndexBuffer m_IBO;
 
     Texture m_Texture;
-    unsigned char m_Sprite=4;
-    unsigned char m_Rows=3;
-    unsigned char m_Cols=8;
+    unsigned int m_Sprite=0, m_Rows, m_Cols;
+
+    float m_Width, m_Height;
 protected:
     glm::vec3 m_Pos;
     glm::vec3 m_Scale;
@@ -29,7 +29,8 @@ protected:
 
     const glm::vec3 m_AxisOfRotation = glm::vec3(0.0f, 0.0f, 1.0f);
 public: 
-Entity(const std::vector<float>& vertices, const std::string& texPath, int texRows, int texCols, 
+Entity(const std::vector<float>& vertices, float width, float height,
+            const std::string& texPath, int texRows, int texCols, 
             glm::vec3 position, float angle, glm::vec3 scale);
     ~Entity();
 
@@ -47,6 +48,8 @@ Entity(const std::vector<float>& vertices, const std::string& texPath, int texRo
 
     glm::vec2 GetTexOffset() const;
     glm::vec3 GetPosition() const { return m_Pos; }
+    float GetWidth() const { return m_Width; }
+    float GetHeight() const { return m_Height; }
 
     inline unsigned int GetIBOSize() const { return m_IBO.GetSize(); }
 };

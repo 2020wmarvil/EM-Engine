@@ -15,7 +15,7 @@ private:
 public:
     Player(const std::string& texPath, int texRows, int texCols,
         glm::vec3 position, float angle, glm::vec3 scale)
-    : Entity(playerVertices, texPath, texRows, texCols, position, angle, scale) {}
+    : Entity(playerVertices, 400, 400, texPath, texRows, texCols, position, angle, scale) {}
 
     void ScaleVelocityX(int scalar) { m_Velocity.x = m_BaseSpeed * scalar; }
     void ScaleVelocityY(int scalar) { m_Velocity.y = m_BaseSpeed * scalar; }

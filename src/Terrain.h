@@ -14,5 +14,5 @@ class Terrain : public Entity {
 public:
     Terrain(const std::string& texPath, int texRows, int texCols,
         glm::vec3 position, float angle, glm::vec3 scale)
-    : Entity(terrainVertices, texPath, texRows, texCols, position, angle, scale) {}
+    : Entity(terrainVertices, 600, 60, texPath, texRows, texCols, position, angle, scale) {}
 };

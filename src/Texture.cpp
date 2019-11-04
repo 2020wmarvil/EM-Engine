@@ -9,8 +9,8 @@ Texture::Texture(const std::string& path, int rows, int cols)
 
     m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BBP, 4);
 
-    m_SpriteWidth = 1.0 / rows;
-    m_SpriteHeight = 1.0 / cols;
+    m_SpriteWidth = 1.0 / cols;
+    m_SpriteHeight = 1.0 / rows;
 
     glGenTextures(1, &m_RendererID);
     glBindTexture(GL_TEXTURE_2D, m_RendererID);
