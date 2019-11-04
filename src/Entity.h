@@ -18,7 +18,7 @@ private:
     IndexBuffer m_IBO;
 
     Texture m_Texture;
-    unsigned char m_Sprite=12;
+    unsigned char m_Sprite=4;
     unsigned char m_Rows=3;
     unsigned char m_Cols=8;
 protected:

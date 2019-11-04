@@ -73,8 +73,8 @@ int main() {
 	SpriteLoader loader;
 	Player player(loader.LoadSprite("../res/sprites/player.ems"), "../res/sprites/Hero.png", 8, 3,
 		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
-//	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"), 
-//		glm::vec3(400.0f, -130.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"), "../res/sprites/Floor.png", 1, 1,
+		glm::vec3(400.0f, -130.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 //	Entity wall(loader.LoadSprite("../res/sprites/wall.ems"), 
 //		glm::vec3(775.0f, 300.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
@@ -91,7 +91,6 @@ int main() {
 
 	float lastTime = glfwGetTime();
 
-	unsigned char sprite = 0;
 	while(!glfwWindowShouldClose(window)) {
   		float current = glfwGetTime();
   		float elapsed = current - lastTime;
@@ -118,11 +117,23 @@ int main() {
 			glm::mat4 mvp = vp * model;
 
 			shader.SetUniformMat4f("u_MVP", mvp);
-			player.SetSprite(sprite++);
 			shader.SetUniformVec2f("u_TexOffset", player.GetTexOffset());
 
 			player.Bind(shader);
 			player.Draw(shader);
+		}
+		// update shader and render floor
+		{
+			shader.Bind();
+
+			glm::mat4 model = floor.ComputeModel();
+			glm::mat4 mvp = vp * model;
+
+			shader.SetUniformMat4f("u_MVP", mvp);
+			shader.SetUniformVec2f("u_TexOffset", floor.GetTexOffset());
+
+			floor.Bind(shader);
+			floor.Draw(shader);
 		}
 
 		// swap the buffers and poll for events
