@@ -22,6 +22,7 @@
 #include "SpriteLoader.h"
 #include "SpriteData.h"
 #include "Texture.h"
+#include "Collider.h"
 
 // constants
 #define WIDTH 1920
@@ -78,6 +79,10 @@ int main() {
 //	Entity wall(loader.LoadSprite("../res/sprites/wall.ems"), 
 //		glm::vec3(775.0f, 300.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
+	std::vector<const Entity*> entities = { &player, &floor };
+
+	Collider collider(entities);
+
 	// create camera
 	Camera camera(&player, WIDTH/2, HEIGHT/2);
 
@@ -103,7 +108,7 @@ int main() {
 		// update the MVP matrices
 		glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT, -1.0f, 1.0f);  
 		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 vp = projection * view;
+		glm::mat4 vp = projection;// * view;
 
 		// prepare for rendering
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

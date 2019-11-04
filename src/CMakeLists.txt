@@ -8,6 +8,7 @@ add_library(source STATIC
 	VertexBuffer.h	VertexBuffer.cpp
 	IndexBuffer.h	IndexBuffer.cpp
 
+	Collider.h	Collider.cpp
 	Entity.cpp	Entity.h
 	Player.cpp 	Player.h
 )
