@@ -74,12 +74,11 @@ int main() {
 		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 	Terrain floor("../res/sprites/Floor.png", 1, 1,
 		glm::vec3(400.0f, -130.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-//	Entity wall(loader.LoadSprite("../res/sprites/wall.ems"), 
-//		glm::vec3(775.0f, 300.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	Terrain wall("../res/sprites/Floor.png", 1, 1,
+		glm::vec3(775.0f, 300.0f, 0.0f), 90.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-	std::vector<const Entity*> entities = { &player, &floor };
-
-	Collider collider(entities);
+	std::vector<const Entity*> entities = { &player, &floor, &wall };
+	Collider collider(&entities);
 
 	// create camera
 	Camera camera(&player, WIDTH/2, HEIGHT/2);
@@ -137,6 +136,19 @@ int main() {
 
 			floor.Bind(shader);
 			floor.Draw(shader);
+		}
+		// update shader and render wall
+		{
+			shader.Bind();
+
+			glm::mat4 model = wall.ComputeModel();
+			glm::mat4 mvp = vp * model;
+
+			shader.SetUniformMat4f("u_MVP", mvp);
+			shader.SetUniformVec2f("u_TexOffset", floor.GetTexOffset());
+
+			wall.Bind(shader);
+			wall.Draw(shader);
 		}
 
 		// swap the buffers and poll for events
