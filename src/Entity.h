@@ -4,7 +4,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include "SpriteData.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -30,8 +29,7 @@ protected:
 
     const glm::vec3 m_AxisOfRotation = glm::vec3(0.0f, 0.0f, 1.0f);
 public: 
-    Entity(const SpriteData& data, const std::string& texPath, int texRows, int texCols);
-    Entity(const SpriteData& data, const std::string& texPath, int texRows, int texCols, 
+Entity(const std::vector<float>& vertices, const std::string& texPath, int texRows, int texCols, 
             glm::vec3 position, float angle, glm::vec3 scale);
     ~Entity();
 

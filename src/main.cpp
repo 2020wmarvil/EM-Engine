@@ -17,6 +17,7 @@
 // our library imports
 #include "Entity.h"
 #include "Player.h"
+#include "Terrain.h"
 #include "Camera.h"
 #include "Shader.h"
 #include "SpriteLoader.h"
@@ -71,10 +72,9 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// load sprites
-	SpriteLoader loader;
-	Player player(loader.LoadSprite("../res/sprites/player.ems"), "../res/sprites/Hero.png", 8, 3,
+	Player player("../res/sprites/Hero.png", 8, 3,
 		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
-	Entity floor(loader.LoadSprite("../res/sprites/floor.ems"), "../res/sprites/Floor.png", 1, 1,
+	Terrain floor("../res/sprites/Floor.png", 1, 1,
 		glm::vec3(400.0f, -130.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 //	Entity wall(loader.LoadSprite("../res/sprites/wall.ems"), 
 //		glm::vec3(775.0f, 300.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
@@ -108,7 +108,7 @@ int main() {
 		// update the MVP matrices
 		glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT, -1.0f, 1.0f);  
 		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 vp = projection;// * view;
+		glm::mat4 vp = projection * view;
 
 		// prepare for rendering
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

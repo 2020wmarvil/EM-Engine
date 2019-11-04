@@ -10,7 +10,8 @@ add_library(source STATIC
 
 	Collider.h	Collider.cpp
 	Entity.cpp	Entity.h
-	Player.cpp 	Player.h
+	Terrain.h
+	Player.h
 )
 
 target_include_directories( source PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} vendor )
