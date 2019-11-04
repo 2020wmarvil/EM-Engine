@@ -20,8 +20,6 @@
 #include "Terrain.h"
 #include "Camera.h"
 #include "Shader.h"
-#include "SpriteLoader.h"
-#include "SpriteData.h"
 #include "Texture.h"
 #include "Collider.h"
 
