@@ -65,15 +65,11 @@ int main() {
 
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	// load sprites
 	Player player("../res/sprites/hero.png", 3, 8,
 		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 	Terrain floor("../res/sprites/floor.png", 1, 1,
-		glm::vec3(400.0f, -130.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		glm::vec3(400.0f, 500.0f/*-130.0f*/, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	Terrain wall("../res/sprites/wall.png", 1, 1,
 		glm::vec3(775.0f, 300.0f, 0.0f), 90.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
@@ -111,34 +107,14 @@ int main() {
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		// update shader and render player
-		{
-			shader.Bind();
+		glEnable(GL_DEPTH_TEST);
+		// render opaque textures
+		glDisable(GL_DEPTH_TEST);
 
-			glm::mat4 model = player.ComputeModel();
-			glm::mat4 mvp = vp * model;
-
-			shader.SetUniformMat4f("u_MVP", mvp);
-			shader.SetUniformVec2f("u_TexOffset", player.GetTexOffset());
-
-			player.Bind(shader);
-			player.Draw(shader);
-		}
-		// update shader and render floor
-		{
-			shader.Bind();
-
-			glm::mat4 model = floor.ComputeModel();
-			glm::mat4 mvp = vp * model;
-
-			shader.SetUniformMat4f("u_MVP", mvp);
-			shader.SetUniformVec2f("u_TexOffset", floor.GetTexOffset());
-
-			floor.Bind(shader);
-			floor.Draw(shader);
-		}
-		// update shader and render wall
-		{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
+		// now render transparent textures from back to front
+		{ // update shader and render wall
 			shader.Bind();
 
 			glm::mat4 model = wall.ComputeModel();
@@ -150,6 +126,31 @@ int main() {
 			wall.Bind(shader);
 			wall.Draw(shader);
 		}
+		{ // update shader and render floor
+			shader.Bind();
+
+			glm::mat4 model = floor.ComputeModel();
+			glm::mat4 mvp = vp * model;
+
+			shader.SetUniformMat4f("u_MVP", mvp);
+			shader.SetUniformVec2f("u_TexOffset", floor.GetTexOffset());
+
+			floor.Bind(shader);
+			floor.Draw(shader);
+		}
+		{ // update shader and render player
+			shader.Bind();
+
+			glm::mat4 model = player.ComputeModel();
+			glm::mat4 mvp = vp * model;
+
+			shader.SetUniformMat4f("u_MVP", mvp);
+			shader.SetUniformVec2f("u_TexOffset", player.GetTexOffset());
+
+			player.Bind(shader);
+			player.Draw(shader);
+		}
+		glDisable(GL_BLEND);
 
 		// swap the buffers and poll for events
 	 	glfwSwapBuffers(window);

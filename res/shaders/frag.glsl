@@ -9,6 +9,4 @@ out vec4 color;
 
 void main() {
     color = texture(u_Texture, v_TexCoord+u_TexOffset);
-    if(color.a<0.1)
-	discard;
 }
