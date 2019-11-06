@@ -24,6 +24,8 @@ void Entity::Bind(Shader& shader) const {
     m_VBO.Bind();
     m_IBO.Bind();
 
+    shader.Bind();
+
     m_Texture.Bind(0);
 	shader.SetUniform1i("u_Texture", 0);
 }
@@ -34,14 +36,19 @@ void Entity::Unbind() const {
     m_IBO.Unbind();
 }
 
-void Entity::Draw(Shader& shader) const {
-	Bind(shader);
-	shader.Bind();
+void Entity::Draw(Shader& shader, glm::mat4* vp) const {
+    Bind(shader);
+
+	glm::mat4 model = ComputeModel();
+	glm::mat4 mvp = *(vp) * model;
+
+	shader.SetUniformMat4f("u_MVP", mvp);
+	shader.SetUniformVec2f("u_TexOffset", GetTexOffset());
 
 	glDrawElements(GL_TRIANGLES, GetIBOSize() / 3, GL_UNSIGNED_INT, nullptr);
 }
 
-glm::mat4 Entity::ComputeModel() {
+glm::mat4 Entity::ComputeModel() const {
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, m_Pos);
 	model = glm::rotate(model, glm::radians(m_Angle), m_AxisOfRotation);

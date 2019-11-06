@@ -37,8 +37,8 @@ Entity(const std::vector<float>& vertices, float width, float height,
     void Bind(Shader& shader) const;
     void Unbind() const;
 
-    glm::mat4 ComputeModel();
-    void Draw(Shader& shader) const;
+    glm::mat4 ComputeModel() const;
+    void Draw(Shader& shader, glm::mat4* vp) const;
     void Update(float dt);
 
     void SetPosition(glm::vec3 position) { m_Pos = position; }
