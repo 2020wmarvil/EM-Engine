@@ -48,6 +48,8 @@ Entity(const std::vector<float>& vertices, float width, float height,
 
     glm::vec2 GetTexOffset() const;
     glm::vec3 GetPosition() const { return m_Pos; }
+    float GetX() const { return m_Pos.x; }
+    float GetY() const { return m_Pos.y; }
     float GetWidth() const { return m_Width; }
     float GetHeight() const { return m_Height; }
 

@@ -8,30 +8,43 @@
 #include "glm/gtc/type_ptr.hpp"
 class Collider {
 private:
-	glm::vec2 Collision(int x1,int y1, int w1,int h1, int x2,int y2, int w2, int h2) { //x and y are top left corner coordinates
-		if(((y1>(y2-h2))&&((y1-h1)<y2))&&((x2<(x1+w1))&&(x1<(x2+w2)))) {
-			return glm::vec2(((x2+(w2/2))-(x1+(w1/2))),((y2-(h2/2))-(y1-(h1/2))));
-		}
-		return glm::vec2(0);
+	int Collision(const Entity* e1, const Entity* e2) {
+		int ax = e1->GetX() - e1->GetWidth() / 2;
+		int ay = e1->GetY() + e1->GetHeight() / 2;
+		int ax1 = e1->GetX() + e1->GetWidth() / 2;
+		int ay1 = e1->GetY() - e1->GetHeight() / 2;
+
+		int bx = e2->GetX() - e2->GetWidth() / 2;
+		int by = e2->GetY() + e2->GetHeight() / 2;
+		int bx1 = e2->GetX() + e2->GetWidth() / 2;
+		int by1 = e2->GetY() - e2->GetHeight() / 2;
+
+		if((bx1 < ax) || (ax1 < bx))
+			return 0;
+		if((by1 > ay) || (ay1 > by))
+			return 0;
+
+		int inter_x0 = ax > bx ? ax : bx;
+		int inter_x1 = ax1 < bx1 ? ax1 : bx1;
+
+		int inter_y0 = ay1 > by1 ? ay1 : by1;
+		int inter_y1 = ay < by ? ay : by;
+
+		return 1;
 	}
 public:
 	std::vector<const Entity*>* m_Entities;
 
-	Collider(std::vector<const Entity*>* entities) {
-		m_Entities = entities;
-	}
+	Collider(std::vector<const Entity*>* entities) : m_Entities(entities) {}
 	~Collider() {}
 
-	std::vector<const Entity*> Collide(Entity* entity) {
-		std::vector<const Entity*> collided;
+	std::vector<int> Collide(Entity* entity) {
+		std::vector<int> collided;
 
-		int count = 0;
 		for (int i=0; i<m_Entities->size(); i++) {
-			if ((*m_Entities)[i] == entity) { continue; }
+			if ((*m_Entities)[i] == entity) continue;
 
-			count++;
-		} std::cout << count << std::endl;
-
-		return collided;		
+			collided.push_back(Collision(entity, (*m_Entities)[i]));
+		} return collided;		
 	}
 };

@@ -61,14 +61,14 @@ void Entity::Update(float dt) {     // change this to a general update call? or 
     float pixels_per_meter = 16.0f;
     glm::vec3 m_Acceleration = glm::vec3(0.0f, -9.81f, 0.0f);
 
-    m_Velocity += m_Acceleration * dt;
+   // m_Velocity += m_Acceleration * dt;
 
-    if (m_Pos.y < 0.0f && m_Velocity.y < 0.0f) {
-        m_Velocity.y = 0.0f;
-        m_Pos.y = 0.0f;
-    }
+  //  if (m_Pos.y < 0.0f && m_Velocity.y < 0.0f) {
+  //      m_Velocity.y = 0.0f;
+  //      m_Pos.y = 0.0f;
+  //  }
 
-    m_Pos += m_Velocity * dt * pixels_per_meter;
+    m_Pos += m_Velocity;// * dt * pixels_per_meter;
 }
 
 glm::vec2 Entity::GetTexOffset() const { 

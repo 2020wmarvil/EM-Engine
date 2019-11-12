@@ -67,14 +67,14 @@ int main() {
 
 	// load sprites
 	Player player("../res/sprites/hero.png", 3, 8,
-		glm::vec3(400.0f, 500.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 0.5f));
+		glm::vec3(0.0f, 200.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	Terrain floor("../res/sprites/floor.png", 1, 1,
-		glm::vec3(400.0f, -130.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	Terrain wall("../res/sprites/wall.png", 1, 1,
 		glm::vec3(775.0f, 300.0f, 0.0f), 90.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	std::vector<const Entity*> entities = { &player, &floor, &wall };
-	Collider collider(&entities);
+	Collider collider(&entities);	// collisions must effect both the position, velocity, and momentum of the object
 
 	// create camera
 	Camera camera(&player, WIDTH/2, HEIGHT/2);
@@ -97,6 +97,10 @@ int main() {
 
 		// update the world	- this should be done cleaner, maybe one update call that updates the whole scene?
 		player.Update(elapsed);
+		std::vector<int> collisions = collider.Collide(&player);
+		for (int collision : collisions) {
+			std::cout << collision << " ";
+		} std::cout << std::endl;
 
 		// update the MVP matrices
 		glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT, -1.0f, 1.0f);  
@@ -157,6 +161,9 @@ void processInput(GLFWwindow *window, Player& player) {
 	
 	if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE) {
 		player.ScaleVelocityX(0);
+	}
+	if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
+		player.ScaleVelocityY(0);
 	}
 }
 
