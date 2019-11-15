@@ -2,33 +2,28 @@
 
 #include "Entity.h"
 
-#include <vector>
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+
+#include <vector>
+
 class Collider {
 private:
 	int Collision(const Entity* e1, const Entity* e2) {
-		int ax = e1->GetX() - e1->GetWidth() / 2;
-		int ay = e1->GetY() + e1->GetHeight() / 2;
-		int ax1 = e1->GetX() + e1->GetWidth() / 2;
-		int ay1 = e1->GetY() - e1->GetHeight() / 2;
+		glm::vec2 a1 = e1->GetTopLeft();
+		glm::vec2 a2 = e1->GetBottomRight();
+		glm::vec2 b1 = e2->GetTopLeft();
+		glm::vec2 b2 = e2->GetBottomRight();
 
-		int bx = e2->GetX() - e2->GetWidth() / 2;
-		int by = e2->GetY() + e2->GetHeight() / 2;
-		int bx1 = e2->GetX() + e2->GetWidth() / 2;
-		int by1 = e2->GetY() - e2->GetHeight() / 2;
+		if((b2.x < a1.x) || (a2.x < b1.x)) { return 0; }
+		if((b2.y > a1.y) || (a2.y > b1.y)) { return 0; }
 
-		if((bx1 < ax) || (ax1 < bx))
-			return 0;
-		if((by1 > ay) || (ay1 > by))
-			return 0;
+		int inter_x1 = a1.x > b1.x ? a1.x : b1.x;
+		int inter_x2 = a2.x < b2.x ? a2.x : b2.x;
 
-		int inter_x0 = ax > bx ? ax : bx;
-		int inter_x1 = ax1 < bx1 ? ax1 : bx1;
-
-		int inter_y0 = ay1 > by1 ? ay1 : by1;
-		int inter_y1 = ay < by ? ay : by;
+		int inter_y1 = a2.y > b2.y ? a2.y : b2.y;
+		int inter_y2 = a1.y < b1.y ? a1.y : b1.y;
 
 		return 1;
 	}

@@ -19,10 +19,10 @@ private:
     Texture m_Texture;
     unsigned int m_Sprite=0, m_Rows, m_Cols;
 
+    glm::vec2 m_TopLeft, m_BottomRight;
     float m_Width, m_Height;
 protected:
     glm::vec3 m_Pos;
-    glm::vec3 m_Scale;
     float m_Angle;
 
     glm::vec3 m_Velocity = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -31,7 +31,7 @@ protected:
 public: 
 Entity(const std::vector<float>& vertices, float width, float height,
             const std::string& texPath, int texRows, int texCols, 
-            glm::vec3 position, float angle, glm::vec3 scale);
+            glm::vec3 position, float angle);
     ~Entity();
 
     void Bind(Shader& shader) const;
@@ -40,16 +40,16 @@ Entity(const std::vector<float>& vertices, float width, float height,
     glm::mat4 ComputeModel() const;
     void Draw(Shader& shader, glm::mat4* vp) const;
     void Update(float dt);
+    void UpdateBounds();
 
-    void SetPosition(glm::vec3 position) { m_Pos = position; }
-    void SetScale(glm::vec3 scale) { m_Scale = scale; }
-    void SetAngle(float angle) { m_Angle = angle; }
+    void SetPosition(glm::vec3 position);
+    void SetAngle(float angle);
     void SetSprite(unsigned int sprite) { m_Sprite = sprite; }
 
     glm::vec2 GetTexOffset() const;
+    glm::vec2 GetTopLeft() const { return m_TopLeft; }
+    glm::vec2 GetBottomRight() const { return m_BottomRight; }
     glm::vec3 GetPosition() const { return m_Pos; }
-    float GetX() const { return m_Pos.x; }
-    float GetY() const { return m_Pos.y; }
     float GetWidth() const { return m_Width; }
     float GetHeight() const { return m_Height; }
 
