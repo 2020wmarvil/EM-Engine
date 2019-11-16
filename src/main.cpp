@@ -66,15 +66,15 @@ int main() {
 	glViewport(0, 0, WIDTH, HEIGHT);
 
 	// load sprites
-	Player player("../res/sprites/hero.png", 3, 8, glm::vec3(0.0f, 200.0f, 0.0f), 0.0f); 
+	Player player("../res/sprites/hero.png", 3, 8, glm::vec3(0.0f, 15.0f, 0.0f), 0.0f); 
 	Terrain floor("../res/sprites/floor.png", 1, 1, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f);
-	Terrain wall("../res/sprites/wall.png", 1, 1, glm::vec3(775.0f, 300.0f, 0.0f), 90.0f);
+	Terrain wall("../res/sprites/wall.png", 1, 1, glm::vec3(60.0f, 30.0f, 0.0f), 90.0f);
 
 	std::vector<const Entity*> entities = { &player, &floor, &wall };
 	Collider collider(&entities);	// collisions must effect both the position, velocity, and momentum of the object
 
 	// create camera
-	Camera camera(&player, WIDTH/2, HEIGHT/2);
+	Camera camera(&player, WIDTH, HEIGHT);
 
 	// create shader
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
@@ -83,7 +83,6 @@ int main() {
 	std::cout << "Error code: " << glGetError() << std::endl;
 
 	double lasttime = glfwGetTime();
-
 	float lastTime = glfwGetTime();
 
 	while(!glfwWindowShouldClose(window)) {

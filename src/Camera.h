@@ -12,7 +12,7 @@ private:
 
     glm::vec2 m_CamOffset;
 
-    const float m_CameraZ = 0.0f;
+    const float m_CameraZ = 0.0f; 
 public:
     Camera(const Entity *focused, int midX, int midY);
     ~Camera();
