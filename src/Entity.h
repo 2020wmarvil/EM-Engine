@@ -13,8 +13,8 @@
 class Entity {
 private:
     VertexArray m_VAO;
-    VertexBuffer m_VBO;
-    IndexBuffer m_IBO;
+    VertexBuffer* m_VBO;
+    IndexBuffer* m_IBO;
 
     Texture m_Texture;
     unsigned int m_Sprite=0, m_Rows, m_Cols;
@@ -29,9 +29,7 @@ protected:
 
     const glm::vec3 m_AxisOfRotation = glm::vec3(0.0f, 0.0f, 1.0f);
 public: 
-Entity(const std::vector<float>& vertices, float width, float height,
-            const std::string& texPath, int texRows, int texCols, 
-            glm::vec3 position, float angle);
+Entity( const std::string& texPath, int texRows, int texCols, glm::vec3 position, float angle);
     ~Entity();
 
     void Bind(Shader& shader) const;
@@ -52,6 +50,5 @@ Entity(const std::vector<float>& vertices, float width, float height,
     glm::vec3 GetPosition() const { return m_Pos; }
     float GetWidth() const { return m_Width; }
     float GetHeight() const { return m_Height; }
-
-    inline unsigned int GetIBOSize() const { return m_IBO.GetSize(); }
+    unsigned int GetIBOSize() const { return m_IBO->GetSize(); }
 };

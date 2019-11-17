@@ -68,9 +68,8 @@ int main() {
 	// load sprites
 	Player player("../res/sprites/hero.png", 3, 8, glm::vec3(0.0f, 15.0f, 0.0f), 0.0f); 
 	Terrain floor("../res/sprites/floor.png", 1, 1, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f);
-	Terrain wall("../res/sprites/wall.png", 1, 1, glm::vec3(60.0f, 30.0f, 0.0f), 90.0f);
 
-	std::vector<const Entity*> entities = { &player, &floor, &wall };
+	std::vector<const Entity*> entities = { &player, &floor };
 	Collider collider(&entities);	// collisions must effect both the position, velocity, and momentum of the object
 
 	// create camera
@@ -114,7 +113,6 @@ int main() {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
 		// now render transparent textures from back to front
-		wall.Draw(shader, &vp);
 		floor.Draw(shader, &vp);
 		player.Draw(shader, &vp);
 		glDisable(GL_BLEND);

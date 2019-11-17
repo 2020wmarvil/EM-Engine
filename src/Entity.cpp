@@ -2,18 +2,26 @@
 
 std::vector<unsigned int> indices = { 0, 1, 2, 0, 2, 3 };
 
-Entity::Entity(const std::vector<float>& vertices, float width, float height,
-            const std::string& texPath, int texRows, int texCols,
-            glm::vec3 position, float angle)
-    : m_VBO(vertices.data(), vertices.size() * sizeof(float), GL_DYNAMIC_DRAW),
-      m_IBO(indices.data(), indices.size() * sizeof(unsigned int), GL_DYNAMIC_DRAW),
-      m_Texture(texPath, texRows, texCols), m_Rows(texRows), m_Cols(texCols),
-      m_Width(width), m_Height(height)
+Entity::Entity( const std::string& texPath, int texRows, int texCols, glm::vec3 position, float angle)
+    : m_Texture(texPath, texRows, texCols), m_Rows(texRows), m_Cols(texCols)
 {
+    m_Width = m_Texture.GetSpriteWidth() * m_Texture.GetWidth();
+    m_Height = m_Texture.GetSpriteHeight() * m_Texture.GetHeight();
+
+    std::vector<float> vertices = {
+        -m_Width/2,  m_Height/2, 0.0f, 1.0f/texRows,  
+         m_Width/2,  m_Height/2, 1.0f/texCols, 1.0f/texRows,  
+         m_Width/2, -m_Height/2, 1.0f/texCols, 0.0f, 
+        -m_Width/2, -m_Height/2, 0.0f, 0.0f
+    };
+
+    m_VBO = new VertexBuffer(vertices.data(), vertices.size() * sizeof(float), GL_DYNAMIC_DRAW);
+    m_IBO = new IndexBuffer(indices.data(), indices.size() * sizeof(unsigned int), GL_DYNAMIC_DRAW);
+
 	VertexBufferLayout layout;
 	layout.PushFloat(2);
 	layout.PushFloat(2);
-	m_VAO.AddBuffer(m_VBO, layout);
+	m_VAO.AddBuffer(*m_VBO, layout);
 
     SetPosition(position);
     if (angle != 0.0f) {
@@ -27,8 +35,8 @@ Entity::~Entity() {}
 
 void Entity::Bind(Shader& shader) const {
     m_VAO.Bind();
-    m_VBO.Bind();
-    m_IBO.Bind();
+    m_VBO->Bind();
+    m_IBO->Bind();
 
     shader.Bind();
 
@@ -38,8 +46,8 @@ void Entity::Bind(Shader& shader) const {
 
 void Entity::Unbind() const {
     m_VAO.Unbind();
-    m_VBO.Unbind();
-    m_IBO.Unbind();
+    m_VBO->Unbind();
+    m_IBO->Unbind();
 }
 
 void Entity::Draw(Shader& shader, glm::mat4* vp) const {
