@@ -4,7 +4,7 @@
 
 class Player : public Entity {
 private:
-    float m_BaseSpeed = 1.0f;
+    float m_BaseSpeed = 0.5f;
 public:
     Player(const std::string& texPath, int texRows, int texCols, glm::vec3 position, float angle)
     : Entity(texPath, texRows, texCols, position, angle) {}

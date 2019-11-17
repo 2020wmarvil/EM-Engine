@@ -5,8 +5,8 @@ std::vector<unsigned int> indices = { 0, 1, 2, 0, 2, 3 };
 Entity::Entity( const std::string& texPath, int texRows, int texCols, glm::vec3 position, float angle)
     : m_Texture(texPath, texRows, texCols), m_Rows(texRows), m_Cols(texCols)
 {
-    m_Width = m_Texture.GetSpriteWidth() * m_Texture.GetWidth();
-    m_Height = m_Texture.GetSpriteHeight() * m_Texture.GetHeight();
+    m_Width = m_Texture.GetSpriteWidth() * m_Texture.GetSpriteSheetWidth();
+    m_Height = m_Texture.GetSpriteHeight() * m_Texture.GetSpriteSheetHeight();
 
     std::vector<float> vertices = {
         -m_Width/2,  m_Height/2, 0.0f, 1.0f/texRows,  

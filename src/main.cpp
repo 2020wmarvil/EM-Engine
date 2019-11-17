@@ -67,6 +67,7 @@ int main() {
 
 	// load sprites
 	Player player("../res/sprites/hero.png", 3, 8, glm::vec3(0.0f, 15.0f, 0.0f), 0.0f); 
+	player.SetSprite(4);
 	Terrain floor("../res/sprites/floor.png", 1, 1, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f);
 
 	std::vector<const Entity*> entities = { &player, &floor };
@@ -108,12 +109,12 @@ int main() {
 
 		glEnable(GL_DEPTH_TEST);
 		// render opaque textures
+		floor.Draw(shader, &vp);
 		glDisable(GL_DEPTH_TEST);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
 		// now render transparent textures from back to front
-		floor.Draw(shader, &vp);
 		player.Draw(shader, &vp);
 		glDisable(GL_BLEND);
 

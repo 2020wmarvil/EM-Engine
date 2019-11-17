@@ -51,4 +51,6 @@ Entity( const std::string& texPath, int texRows, int texCols, glm::vec3 position
     float GetWidth() const { return m_Width; }
     float GetHeight() const { return m_Height; }
     unsigned int GetIBOSize() const { return m_IBO->GetSize(); }
+
+    bool isPixelTransparent(int x, int y) const { return m_Texture.isTransparent(m_Sprite, x, y); }
 };

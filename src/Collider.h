@@ -25,7 +25,14 @@ private:
 		int inter_y1 = a2.y > b2.y ? a2.y : b2.y;
 		int inter_y2 = a1.y < b1.y ? a1.y : b1.y;
 
-		return 1;
+		for (int y=inter_y2; y>inter_y1; y--) {
+			for (int x=inter_x1; x<inter_x2; x++) {
+				if (!e1->isPixelTransparent(x - a1.x, e1->GetHeight() - (y - a2.y)) && 
+					!e2->isPixelTransparent(x - b1.x, e2->GetHeight() - (y - b2.y))) {
+					return 1;
+				}
+			}
+		} return 0;
 	}
 public:
 	std::vector<const Entity*>* m_Entities;
