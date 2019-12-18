@@ -71,7 +71,18 @@ glm::mat4 Entity::ComputeModel() const {
 }
 
 void Entity::Update(float dt) {     // change this to a general update call? or perhaps entity has an update call which this class will override?
-    SetPosition(m_Pos + m_Velocity);
+    // glm::vec3 acceleration = glm::vec3(0.0f, -9.81f, 0.0f);
+    glm::vec3 acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
+
+   // if (m_Grounded) {
+   //     acceleration = glm::vec3(0.0f);
+   //     m_Velocity.y = 0.0f;
+   // }
+
+    std::cout << "\t" << m_Velocity.x << " " << m_Velocity.y << "\n";
+    m_Velocity += acceleration * dt;
+    std::cout << "\t" << m_Velocity.x << " " << m_Velocity.y << "\n";
+    SetPosition(m_Pos + m_Velocity * dt);
 }
 
 void Entity::UpdateBounds() {
@@ -80,6 +91,7 @@ void Entity::UpdateBounds() {
 }
 
 void Entity::SetPosition(glm::vec3 position) { 
+    m_PrevPos = m_Pos;
     m_Pos = position;
 
     UpdateBounds();

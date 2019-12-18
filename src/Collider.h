@@ -10,11 +10,11 @@
 
 class Collider {
 private:
-	int Collision(const Entity* e1, const Entity* e2) {
-		glm::vec2 a1 = e1->GetTopLeft();
-		glm::vec2 a2 = e1->GetBottomRight();
-		glm::vec2 b1 = e2->GetTopLeft();
-		glm::vec2 b2 = e2->GetBottomRight();
+	int Collide(const Entity* e1, const Entity* e2) {
+		glm::vec2 a1 = glm::vec2((int)e1->GetTopLeft().x, (int)e1->GetTopLeft().y);
+		glm::vec2 a2 = glm::vec2((int)e1->GetBottomRight().x, (int)e1->GetBottomRight().y);
+		glm::vec2 b1 = glm::vec2((int)e2->GetTopLeft().x, (int)e2->GetTopLeft().y);
+		glm::vec2 b2 = glm::vec2((int)e2->GetBottomRight().x, (int)e2->GetBottomRight().y);
 
 		if((b2.x < a1.x) || (a2.x < b1.x)) { return 0; }
 		if((b2.y > a1.y) || (a2.y > b1.y)) { return 0; }
@@ -40,13 +40,31 @@ public:
 	Collider(std::vector<const Entity*>* entities) : m_Entities(entities) {}
 	~Collider() {}
 
-	std::vector<int> Collide(Entity* entity) {
+	std::vector<int> CollideEntities(Entity* entity) {
 		std::vector<int> collided;
 
 		for (int i=0; i<m_Entities->size(); i++) {
 			if ((*m_Entities)[i] == entity) continue;
 
-			collided.push_back(Collision(entity, (*m_Entities)[i]));
+			collided.push_back(Collide(entity, (*m_Entities)[i]));
 		} return collided;		
+	}
+
+	void Resolve(Entity* e, std::vector<int>& collisions) {
+		glm::vec3 current = e->GetPosition();
+		glm::vec3 prev = e->GetPreviousPosition();
+
+		for (int i=0; i<collisions.size(); i++) {
+			if (collisions[i] == 1) {
+				e->SetPosition(prev);
+				// e->SetGrounded(true);
+
+				std::cout << "collision!\n";
+
+				std::cout << "\tCurrent:  (" << current.x << ", " << current.y << ")\n";
+				std::cout << "\tPrevious: (" << prev.x << ", " << prev.y << ")\n";
+				std::cout << "\tActual: (" << e->GetPosition().x << ", " << e->GetPosition().y << ")\n";
+			}
+		}
 	}
 };

@@ -93,10 +93,11 @@ int main() {
 
 		// update the world	- this should be done cleaner, maybe one update call that updates the whole scene?
 		player.Update(elapsed);
-		std::vector<int> collisions = collider.Collide(&player);
-		for (int collision : collisions) {
-			std::cout << collision << " ";
-		} std::cout << std::endl;
+		std::vector<int> collisions = collider.CollideEntities(&player);
+		for (int i=0; i<collisions.size(); i++) {
+			std::cout << collisions[i] << " ";
+		} std::cout << "\n";
+		// collider.Resolve(&player, collisions);
 
 		// update the MVP matrices
 		glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT, -1.0f, 1.0f);  

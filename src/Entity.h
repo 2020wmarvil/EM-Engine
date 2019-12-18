@@ -21,8 +21,10 @@ private:
 
     glm::vec2 m_TopLeft, m_BottomRight;
     float m_Width, m_Height;
+
+    bool m_Grounded = false;
 protected:
-    glm::vec3 m_Pos;
+    glm::vec3 m_Pos, m_PrevPos;
     float m_Angle;
 
     glm::vec3 m_Velocity = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -43,11 +45,13 @@ Entity( const std::string& texPath, int texRows, int texCols, glm::vec3 position
     void SetPosition(glm::vec3 position);
     void SetAngle(float angle);
     void SetSprite(unsigned int sprite) { m_Sprite = sprite; }
+    void SetGrounded(bool grounded) { m_Grounded = grounded; }
 
     glm::vec2 GetTexOffset() const;
     glm::vec2 GetTopLeft() const { return m_TopLeft; }
     glm::vec2 GetBottomRight() const { return m_BottomRight; }
     glm::vec3 GetPosition() const { return m_Pos; }
+    glm::vec3 GetPreviousPosition() const { return m_PrevPos; }
     float GetWidth() const { return m_Width; }
     float GetHeight() const { return m_Height; }
     unsigned int GetIBOSize() const { return m_IBO->GetSize(); }
