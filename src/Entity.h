@@ -4,6 +4,9 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+#include <thread>
+#include <chrono>
+
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -41,6 +44,16 @@ Entity( const std::string& texPath, int texRows, int texCols, glm::vec3 position
     void Draw(Shader& shader, glm::mat4* vp) const;
     void Update(float dt);
     void UpdateBounds();
+    void StartAnimations(Entity* entity, bool* cont) {
+	std::thread thread(
+		[](Entity* entity, bool* cont) { 
+			unsigned int sprite=0;
+			while(*cont) {
+				entity->SetSprite(sprite++);
+				std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			}
+		}, entity, cont);
+    }
 
     void SetPosition(glm::vec3 position);
     void SetAngle(float angle);

@@ -26,7 +26,7 @@
 // constants
 #define WIDTH 1920
 #define HEIGHT 1080
-#define TARGET_FPS 600
+#define TARGET_FPS 60
 
 void processInput(GLFWwindow *window, Player& player);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -80,6 +80,16 @@ int main() {
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
 	shader.Bind();
 
+	bool cont = true;
+	std::thread thread(
+		[](Player* player, bool* cont) { 
+			unsigned int sprite=0;
+			while(*cont) {
+				player->SetSprite(sprite++);
+				std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			}
+		}, &player, &cont);
+
 	std::cout << "Error code: " << glGetError() << std::endl;
 
 	double lasttime = glfwGetTime();
@@ -124,15 +134,17 @@ int main() {
 		glfwPollEvents();
 
 		// cap the framerate
-	    while (glfwGetTime() < lasttime + 1.0/TARGET_FPS) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-	    } lasttime += 1.0/TARGET_FPS;
+	    	while (glfwGetTime() < lasttime + 1.0/TARGET_FPS) {
+	    		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	    	} lasttime += 1.0/TARGET_FPS;
 
 		// error checking
 		if (int e=glGetError() != 0) { std::cout << "OpenGL Error: " << e << std::endl; }
 
   		lastTime = current;
 	}
+	cont=false;
+	thread.join();
 
 	// terminate glfw
     glfwDestroyWindow(window);
