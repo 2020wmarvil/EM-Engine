@@ -81,14 +81,7 @@ int main() {
 	shader.Bind();
 
 	bool cont = true;
-	std::thread thread(
-		[](Player* player, bool* cont) { 
-			unsigned int sprite=0;
-			while(*cont) {
-				player->SetSprite(sprite++);
-				std::this_thread::sleep_for(std::chrono::milliseconds(500));
-			}
-		}, &player, &cont);
+	player.StartAnimations(&player, &cont);
 
 	std::cout << "Error code: " << glGetError() << std::endl;
 
@@ -143,8 +136,8 @@ int main() {
 
   		lastTime = current;
 	}
+
 	cont=false;
-	thread.join();
 
 	// terminate glfw
     glfwDestroyWindow(window);

@@ -6,6 +6,7 @@
 
 #include <thread>
 #include <chrono>
+#include <mutex>
 
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -24,6 +25,9 @@ private:
 
     glm::vec2 m_TopLeft, m_BottomRight;
     float m_Width, m_Height;
+
+    std::thread* m_AnimationThread;
+    std::mutex m_ThreadLock;
 
     bool m_Grounded = false;
 protected:
@@ -45,7 +49,7 @@ Entity( const std::string& texPath, int texRows, int texCols, glm::vec3 position
     void Update(float dt);
     void UpdateBounds();
     void StartAnimations(Entity* entity, bool* cont) {
-	std::thread thread(
+	m_AnimationThread = new std::thread(
 		[](Entity* entity, bool* cont) { 
 			unsigned int sprite=0;
 			while(*cont) {
