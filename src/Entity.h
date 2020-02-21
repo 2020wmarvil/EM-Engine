@@ -22,6 +22,7 @@ private:
 
     Texture m_Texture;
     unsigned int m_Sprite=0, m_Rows, m_Cols;
+    float m_SpriteInterval = 0.250f, m_LastTime = 0.0f;
 
     glm::vec2 m_TopLeft, m_BottomRight;
     float m_Width, m_Height;
@@ -47,17 +48,8 @@ Entity( const std::string& texPath, int texRows, int texCols, glm::vec3 position
     glm::mat4 ComputeModel() const;
     void Draw(Shader& shader, glm::mat4* vp) const;
     void Update(float dt);
+    void UpdateAnimation(float dt);
     void UpdateBounds();
-    void StartAnimations(Entity* entity, bool* cont) {
-	m_AnimationThread = new std::thread(
-		[](Entity* entity, bool* cont) { 
-			unsigned int sprite=0;
-			while(*cont) {
-				entity->SetSprite(sprite++);
-				std::this_thread::sleep_for(std::chrono::milliseconds(500));
-			}
-		}, entity, cont);
-    }
 
     void SetPosition(glm::vec3 position);
     void SetAngle(float angle);

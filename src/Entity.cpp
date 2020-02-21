@@ -74,15 +74,24 @@ void Entity::Update(float dt) {     // change this to a general update call? or 
     // glm::vec3 acceleration = glm::vec3(0.0f, -9.81f, 0.0f);
     glm::vec3 acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 
-   // if (m_Grounded) {
-   //     acceleration = glm::vec3(0.0f);
-   //     m_Velocity.y = 0.0f;
-   // }
+    if (m_Grounded) {
+        acceleration.y = 0.0f;
+    }
 
-    std::cout << "\t" << m_Velocity.x << " " << m_Velocity.y << "\n";
     m_Velocity += acceleration * dt;
-    std::cout << "\t" << m_Velocity.x << " " << m_Velocity.y << "\n";
     SetPosition(m_Pos + m_Velocity * dt);
+
+    // UpdateAnimation(dt);
+}
+
+void Entity::UpdateAnimation(float dt) {
+    m_LastTime += dt;
+
+    if (m_LastTime > m_SpriteInterval) {
+        SetSprite(++m_Sprite);
+
+        m_LastTime = 0.0f; 
+    }
 }
 
 void Entity::UpdateBounds() {

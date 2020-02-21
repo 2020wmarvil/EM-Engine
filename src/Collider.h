@@ -10,7 +10,7 @@
 
 class Collider {
 private:
-	int Collide(const Entity* e1, const Entity* e2) {
+	int CollidePP(const Entity* e1, const Entity* e2) {
 		glm::vec2 a1 = glm::vec2((int)e1->GetTopLeft().x, (int)e1->GetTopLeft().y);
 		glm::vec2 a2 = glm::vec2((int)e1->GetBottomRight().x, (int)e1->GetBottomRight().y);
 		glm::vec2 b1 = glm::vec2((int)e2->GetTopLeft().x, (int)e2->GetTopLeft().y);
@@ -34,6 +34,17 @@ private:
 			}
 		} return 0;
 	}
+	int CollideBB(const Entity* e1, const Entity* e2) {
+		glm::vec2 a1 = glm::vec2((int)e1->GetTopLeft().x,     (int)e1->GetTopLeft().y);
+		glm::vec2 a2 = glm::vec2((int)e1->GetBottomRight().x, (int)e1->GetBottomRight().y);
+		glm::vec2 b1 = glm::vec2((int)e2->GetTopLeft().x,     (int)e2->GetTopLeft().y);
+		glm::vec2 b2 = glm::vec2((int)e2->GetBottomRight().x, (int)e2->GetBottomRight().y);
+
+		if((b2.x <= a1.x) || (a2.x <= b1.x)) { return 0; }
+		if((b2.y >= a1.y) || (a2.y >= b1.y)) { return 0; }
+
+		return 1;
+	}
 public:
 	std::vector<const Entity*>* m_Entities;
 
@@ -46,24 +57,32 @@ public:
 		for (int i=0; i<m_Entities->size(); i++) {
 			if ((*m_Entities)[i] == entity) continue;
 
-			collided.push_back(Collide(entity, (*m_Entities)[i]));
+			collided.push_back(CollidePP(entity, (*m_Entities)[i]));
 		} return collided;		
 	}
 
 	void Resolve(Entity* e, std::vector<int>& collisions) {
-		glm::vec3 current = e->GetPosition();
+		glm::vec3 cur= e->GetPosition();
 		glm::vec3 prev = e->GetPreviousPosition();
-
 		for (int i=0; i<collisions.size(); i++) {
 			if (collisions[i] == 1) {
-				e->SetPosition(prev);
-				// e->SetGrounded(true);
+				 e->SetPosition(prev); return;
 
-				std::cout << "collision!\n";
+				float dx = (cur.x - prev.x) / 2.0f;
+				float dy = (cur.y - prev.y) / 2.0f;
 
-				std::cout << "\tCurrent:  (" << current.x << ", " << current.y << ")\n";
-				std::cout << "\tPrevious: (" << prev.x << ", " << prev.y << ")\n";
-				std::cout << "\tActual: (" << e->GetPosition().x << ", " << e->GetPosition().y << ")\n";
+				glm::vec3 mid = glm::vec3(cur.x - dx, cur.y - dy, cur.z);
+				
+				cur = mid;
+
+				while (dx > 1 && dy > 1) {
+					dx = (cur.x - prev.x) / 2.0f;
+					dy = (cur.y - prev.y) / 2.0f;
+
+					mid = glm::vec3(cur.x - dx, cur.y - dy, cur.z);
+
+					cur = mid;
+				} e->SetPosition(mid);
 			}
 		}
 	}

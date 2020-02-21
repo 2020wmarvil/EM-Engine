@@ -80,9 +80,6 @@ int main() {
 	Shader shader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
 	shader.Bind();
 
-	bool cont = true;
-	player.StartAnimations(&player, &cont);
-
 	std::cout << "Error code: " << glGetError() << std::endl;
 
 	double lasttime = glfwGetTime();
@@ -100,7 +97,7 @@ int main() {
 		for (int i=0; i<collisions.size(); i++) {
 			std::cout << collisions[i] << " ";
 		} std::cout << "\n";
-		// collider.Resolve(&player, collisions);
+		collider.Resolve(&player, collisions);
 
 		// update the MVP matrices
 		glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT, -1.0f, 1.0f);  
@@ -136,8 +133,6 @@ int main() {
 
   		lastTime = current;
 	}
-
-	cont=false;
 
 	// terminate glfw
     glfwDestroyWindow(window);
